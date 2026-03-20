@@ -9,12 +9,10 @@ import {
   UsuarioNoEncontradoException,
 } from '../src/domain/exceptions/auth.exception';
 
-// Constantes
 const ACCESS_TOKEN_FAKE = 'access_token_fake';
 const REFRESH_TOKEN_FAKE = 'refresh_token_fake';
 const EMAIL_VALIDO = 'admin@test.com';
 
-// Factories
 const crearUsuarioMock = (overrides: Partial<Usuario> = {}): Usuario => {
   return new Usuario({
     id: 1,
@@ -40,7 +38,6 @@ const crearTokenRefrescoVigente = (overrides: Partial<TokenRefresh> = {}): Token
   });
 };
 
-// Mocks
 const mockAuthRepository: jest.Mocked<IAuthRepository> = {
   encontrarUsuarioPorEmail: jest.fn(),
   encontrarUsuarioPorId: jest.fn(),
