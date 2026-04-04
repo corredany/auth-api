@@ -1,4 +1,5 @@
 import { Controller, Post, Body, Ip, Headers, HttpCode } from '@nestjs/common';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { LoginUseCase } from '../logic/login';
 import { RefreshTokenUseCase } from '../logic/refreshtoken';
 import { LogoutUseCase } from '../logic/logout';
@@ -14,6 +15,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
+  @Throttle({ login: { ttl: 60000, limit: 5 } })
   login(
     @Body() dto: LoginDto,
     @Ip() ip: string,
@@ -24,12 +26,14 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
+  @SkipThrottle()
   refresh(@Body() dto: RefreshTokenDto) {
     return this.refreshTokenUseCase.execute(dto.token);
   }
 
   @Post('logout')
   @HttpCode(200)
+  @SkipThrottle()
   logout(@Body() dto: LogoutDto) {
     return this.logoutUseCase.execute(dto.token);
   }
