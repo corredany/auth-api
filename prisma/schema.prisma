@@ -7,12 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Rol {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique
+  usuarios Usuario[]
+}
+
 model Usuario {
   id             Int             @id @default(autoincrement())
   nombre         String
   email          String          @unique
   contrasena     String
   rolId          Int
+  rol            Rol             @relation(fields: [rolId], references: [id])
   creadoEn       DateTime        @default(now())
   actualizadoEn  DateTime        @updatedAt
   tokens         TokenRefresco[]
