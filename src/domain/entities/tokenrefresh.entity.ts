@@ -13,13 +13,7 @@ export class TokenRefresh {
     Object.assign(this, data);
   }
 
-
-  //Reglas de negocio
   estaVigente(): boolean {
     return !this.revocado && this.expiraEn > new Date();
-  }
-
-  estaRevocado(): boolean {
-    return this.revocado;
   }
 }

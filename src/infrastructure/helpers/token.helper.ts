@@ -17,7 +17,15 @@ export class TokenHelper implements ITokenService {
     });
   }
 
-  verificarToken(token: string): { id: number; email: string; rolId: number; rolNombre: string; permisos: string[] } | null {
+  verificarAccessToken(token: string): { id: number; email: string; rolId: number; rolNombre: string; permisos: string[] } | null {
+    try {
+      return jwt.verify(token, jwtConfig.secret as string) as any;
+    } catch {
+      return null;
+    }
+  }
+
+  verificarRefreshToken(token: string): { id: number } | null {
     try {
       return jwt.verify(token, jwtConfig.secret as string) as any;
     } catch {

@@ -16,7 +16,7 @@ export class RefreshTokenUseCase {
   ) {}
 
   async execute(token: string): Promise<{ accessToken: string }> {
-    const payload = this.tokenService.verificarToken(token);
+    const payload = this.tokenService.verificarRefreshToken(token);
     if (!payload) throw new TokenInvalidoException();
 
     const tokenRefresco = await this.authRepository.encontrarTokenRefresco(token);

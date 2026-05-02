@@ -20,6 +20,8 @@ const crearUsuarioMock = (overrides: Partial<Usuario> = {}): Usuario => {
     email: EMAIL_VALIDO,
     contrasena: 'hash_encriptado',
     rolId: 1,
+    rolNombre: 'admin',
+    permisos: ['contenido:gestionar', 'usuarios:gestionar'],
     ...overrides,
   });
 };
@@ -49,7 +51,8 @@ const mockAuthRepository: jest.Mocked<IAuthRepository> = {
 const mockTokenService: jest.Mocked<ITokenService> = {
   generarAccessToken: jest.fn(),
   generarRefreshToken: jest.fn(),
-  verificarToken: jest.fn(),
+  verificarAccessToken: jest.fn(),
+  verificarRefreshToken: jest.fn(),
 };
 
 describe('RefreshTokenUseCase', () => {
@@ -62,7 +65,7 @@ describe('RefreshTokenUseCase', () => {
 
   describe('cuando el token es inválido', () => {
     beforeEach(() => {
-      mockTokenService.verificarToken.mockReturnValue(null);
+      mockTokenService.verificarRefreshToken.mockReturnValue(null);
     });
 
     it('debe lanzar TokenInvalidoException', async () => {
@@ -82,7 +85,7 @@ describe('RefreshTokenUseCase', () => {
 
   describe('cuando el token no existe en BD', () => {
     beforeEach(() => {
-      mockTokenService.verificarToken.mockReturnValue({ id: 1, email: EMAIL_VALIDO, rolId: 1 });
+      mockTokenService.verificarRefreshToken.mockReturnValue({ id: 1 });
       mockAuthRepository.encontrarTokenRefresco.mockResolvedValue(null);
     });
 
@@ -103,7 +106,7 @@ describe('RefreshTokenUseCase', () => {
 
   describe('cuando el token está revocado', () => {
     beforeEach(() => {
-      mockTokenService.verificarToken.mockReturnValue({ id: 1, email: EMAIL_VALIDO, rolId: 1 });
+      mockTokenService.verificarRefreshToken.mockReturnValue({ id: 1 });
       mockAuthRepository.encontrarTokenRefresco.mockResolvedValue(
         crearTokenRefrescoVigente({ revocado: true }),
       );
@@ -126,7 +129,7 @@ describe('RefreshTokenUseCase', () => {
 
   describe('cuando el usuario no existe', () => {
     beforeEach(() => {
-      mockTokenService.verificarToken.mockReturnValue({ id: 1, email: EMAIL_VALIDO, rolId: 1 });
+      mockTokenService.verificarRefreshToken.mockReturnValue({ id: 1 });
       mockAuthRepository.encontrarTokenRefresco.mockResolvedValue(crearTokenRefrescoVigente());
       mockAuthRepository.encontrarUsuarioPorId.mockResolvedValue(null);
     });
@@ -140,7 +143,7 @@ describe('RefreshTokenUseCase', () => {
 
   describe('cuando el token es válido', () => {
     beforeEach(() => {
-      mockTokenService.verificarToken.mockReturnValue({ id: 1, email: EMAIL_VALIDO, rolId: 1 });
+      mockTokenService.verificarRefreshToken.mockReturnValue({ id: 1 });
       mockAuthRepository.encontrarTokenRefresco.mockResolvedValue(crearTokenRefrescoVigente());
       mockAuthRepository.encontrarUsuarioPorId.mockResolvedValue(crearUsuarioMock());
       mockTokenService.generarAccessToken.mockReturnValue(ACCESS_TOKEN_FAKE);
@@ -163,6 +166,8 @@ describe('RefreshTokenUseCase', () => {
         id: 1,
         email: EMAIL_VALIDO,
         rolId: 1,
+        rolNombre: 'admin',
+        permisos: ['contenido:gestionar', 'usuarios:gestionar'],
       });
     });
   });

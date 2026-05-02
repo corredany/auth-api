@@ -6,7 +6,6 @@ import { Usuario } from '../src/domain/entities/usuario.entity';
 import { TokenRefresh } from '../src/domain/entities/tokenrefresh.entity';
 import { CredencialesInvalidasException } from '../src/domain/exceptions/auth.exception';
 
-// Constantes — sin magic strings
 const ACCESS_TOKEN_FAKE = 'access_token_fake';
 const REFRESH_TOKEN_FAKE = 'refresh_token_fake';
 const EMAIL_VALIDO = 'admin@test.com';
@@ -14,7 +13,6 @@ const CONTRASENA_VALIDA = '123456';
 const IP_ADDRESS = '127.0.0.1';
 const USER_AGENT = 'Mozilla/5.0';
 
-// Factory — reutilizable en todos los tests
 const crearUsuarioMock = (overrides: Partial<Usuario> = {}): Usuario => {
   return new Usuario({
     id: 1,
@@ -22,6 +20,8 @@ const crearUsuarioMock = (overrides: Partial<Usuario> = {}): Usuario => {
     email: EMAIL_VALIDO,
     contrasena: 'hash_encriptado',
     rolId: 1,
+    rolNombre: 'admin',
+    permisos: ['contenido:gestionar', 'usuarios:gestionar'],
     ...overrides,
   });
 };
@@ -32,7 +32,6 @@ const crearLoginDto = (overrides = {}) => ({
   ...overrides,
 });
 
-// Mocks
 const mockAuthRepository: jest.Mocked<IAuthRepository> = {
   encontrarUsuarioPorEmail: jest.fn(),
   encontrarUsuarioPorId: jest.fn(),
@@ -49,7 +48,8 @@ const mockHashService: jest.Mocked<IHashService> = {
 const mockTokenService: jest.Mocked<ITokenService> = {
   generarAccessToken: jest.fn(),
   generarRefreshToken: jest.fn(),
-  verificarToken: jest.fn(),
+  verificarAccessToken: jest.fn(),
+  verificarRefreshToken: jest.fn(),
 };
 
 describe('LoginUseCase', () => {
@@ -142,6 +142,8 @@ describe('LoginUseCase', () => {
         id: 1,
         email: EMAIL_VALIDO,
         rolId: 1,
+        rolNombre: 'admin',
+        permisos: ['contenido:gestionar', 'usuarios:gestionar'],
       });
     });
 
