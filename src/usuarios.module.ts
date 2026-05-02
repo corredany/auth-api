@@ -6,6 +6,7 @@ import { ObtenerUsuariosUseCase } from './application/logic/usuarios/obtener-usu
 import { CrearUsuarioUseCase } from './application/logic/usuarios/crear-usuario.usecase';
 import { ActualizarUsuarioUseCase } from './application/logic/usuarios/actualizar-usuario.usecase';
 import { EliminarUsuarioUseCase } from './application/logic/usuarios/eliminar-usuario.usecase';
+import { PermisosGuard } from './infrastructure/guards/permisos.guard';
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 
 @Module({
@@ -16,6 +17,7 @@ import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
     CrearUsuarioUseCase,
     ActualizarUsuarioUseCase,
     EliminarUsuarioUseCase,
+    PermisosGuard,
     JwtStrategy,
   ],
 })

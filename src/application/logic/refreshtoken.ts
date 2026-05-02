@@ -31,6 +31,8 @@ export class RefreshTokenUseCase {
       id: usuario.id,
       email: usuario.email,
       rolId: usuario.rolId,
+      rolNombre: usuario.rolNombre,
+      permisos: usuario.permisos ?? [],
     });
 
     return { accessToken };

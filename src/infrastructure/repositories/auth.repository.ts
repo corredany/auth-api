@@ -4,20 +4,42 @@ import { Usuario } from '../../domain/entities/usuario.entity';
 import { TokenRefresh } from '../../domain/entities/tokenrefresh.entity';
 import { prisma } from '../database/prisma';
 
+const incluirRolConPermisos = {
+  rol: {
+    include: {
+      permisos: {
+        include: { permiso: true },
+      },
+    },
+  },
+};
+
+function mapearUsuario(u: any): Usuario {
+  return new Usuario({
+    ...u,
+    rolNombre: u.rol.nombre,
+    permisos: u.rol.permisos.map((rp: any) => rp.permiso.nombre),
+  });
+}
+
 @Injectable()
 export class AuthRepository implements IAuthRepository {
   async encontrarUsuarioPorEmail(email: string): Promise<Usuario | null> {
     const usuario = await prisma.usuario.findUnique({
       where: { email },
+      include: incluirRolConPermisos,
     });
-    return usuario ? new Usuario(usuario) : null;
+    if (!usuario) return null;
+    return mapearUsuario(usuario);
   }
 
   async encontrarUsuarioPorId(id: number): Promise<Usuario | null> {
     const usuario = await prisma.usuario.findUnique({
       where: { id },
+      include: incluirRolConPermisos,
     });
-    return usuario ? new Usuario(usuario) : null;
+    if (!usuario) return null;
+    return mapearUsuario(usuario);
   }
 
   async guardarTokenRefresco(data: Partial<TokenRefresh>): Promise<TokenRefresh> {

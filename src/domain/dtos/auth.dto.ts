@@ -19,5 +19,6 @@ export interface AuthResponseDto {
     nombre: string;
     email: string;
     rolId: number;
+    rolNombre: string;
   };
 }

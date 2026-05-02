@@ -5,7 +5,7 @@ import { jwtConfig } from '../config/jwt.config';
 
 @Injectable()
 export class TokenHelper implements ITokenService {
-  generarAccessToken(payload: { id: number; email: string; rolId: number }): string {
+  generarAccessToken(payload: { id: number; email: string; rolId: number; rolNombre: string; permisos: string[] }): string {
     return jwt.sign(payload, jwtConfig.secret as string, {
       expiresIn: jwtConfig.accessTokenExpiration as any,
     });
@@ -17,7 +17,7 @@ export class TokenHelper implements ITokenService {
     });
   }
 
-  verificarToken(token: string): { id: number; email: string; rolId: number } | null {
+  verificarToken(token: string): { id: number; email: string; rolId: number; rolNombre: string; permisos: string[] } | null {
     try {
       return jwt.verify(token, jwtConfig.secret as string) as any;
     } catch {

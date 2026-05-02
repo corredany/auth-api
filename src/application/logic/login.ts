@@ -25,6 +25,8 @@ export class LoginUseCase {
       id: usuario.id,
       email: usuario.email,
       rolId: usuario.rolId,
+      rolNombre: usuario.rolNombre,
+      permisos: usuario.permisos ?? [],
     });
 
     const refreshToken = this.tokenService.generarRefreshToken({ id: usuario.id });
@@ -50,6 +52,7 @@ export class LoginUseCase {
         nombre: usuario.nombre,
         email: usuario.email,
         rolId: usuario.rolId,
+        rolNombre: usuario.rolNombre,
       },
     };
   }

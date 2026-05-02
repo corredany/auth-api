@@ -4,6 +4,8 @@ export class Usuario {
   email: string;
   contrasena: string;
   rolId: number;
+  rolNombre: string;
+  permisos: string[];
   creadoEn: Date;
   actualizadoEn: Date;
 
